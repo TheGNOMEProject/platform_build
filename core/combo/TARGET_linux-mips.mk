@@ -40,6 +40,10 @@ else
 TARGET_GCC_VERSION := $(TARGET_GCC_VERSION_EXP)
 endif
 
+# Specify Target Custom GCC Chains to use:
+TARGET_GCC_VERSION_AND := 4.8
+TARGET_GCC_VERSION_ARM := 4.8
+
 TARGET_ARCH_SPECIFIC_MAKEFILE := $(BUILD_COMBOS)/arch/$(TARGET_ARCH)/$(TARGET_ARCH_VARIANT).mk
 ifeq ($(strip $(wildcard $(TARGET_ARCH_SPECIFIC_MAKEFILE))),)
 $(error Unknown MIPS architecture variant: $(TARGET_ARCH_VARIANT))
