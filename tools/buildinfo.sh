@@ -42,4 +42,7 @@ echo "ro.build.description=$PRIVATE_BUILD_DESC"
 echo "ro.build.fingerprint=$BUILD_FINGERPRINT"
 echo "ro.build.characteristics=$TARGET_AAPT_CHARACTERISTICS"
 
+#Gnome properties
+echo "ro.gnome=$KEY_GNOME_VERSION"
+
 echo "# end build properties"
