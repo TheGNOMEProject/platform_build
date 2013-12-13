@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,76 +26,72 @@ VARIANT_DEFCONFIG := $(TARGET_KERNEL_VARIANT_CONFIG)
 SELINUX_DEFCONFIG := $(TARGET_KERNEL_SELINUX_CONFIG)
 
 ## Internal variables
-ifeq ($(OUT_DIR),out)
 KERNEL_OUT := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ
-else
-KERNEL_OUT := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ
-endif
 KERNEL_CONFIG := $(KERNEL_OUT)/.config
 
 ifeq ($(BOARD_USES_UBOOT),true)
-        TARGET_PREBUILT_INT_KERNEL := $(KERNEL_OUT)/arch/$(TARGET_ARCH)/boot/uImage
-        TARGET_PREBUILT_INT_KERNEL_TYPE := uImage
+	TARGET_PREBUILT_INT_KERNEL := $(KERNEL_OUT)/arch/$(TARGET_ARCH)/boot/uImage
+	TARGET_PREBUILT_INT_KERNEL_TYPE := uImage
 else ifeq ($(BOARD_USES_UNCOMPRESSED_BOOT),true)
-        TARGET_PREBUILT_INT_KERNEL := $(KERNEL_OUT)/arch/$(TARGET_ARCH)/boot/Image
-        TARGET_PREBUILT_INT_KERNEL_TYPE := Image
+	TARGET_PREBUILT_INT_KERNEL := $(KERNEL_OUT)/arch/$(TARGET_ARCH)/boot/Image
+	TARGET_PREBUILT_INT_KERNEL_TYPE := Image
 else
-        TARGET_PREBUILT_INT_KERNEL := $(KERNEL_OUT)/arch/$(TARGET_ARCH)/boot/zImage
-        TARGET_PREBUILT_INT_KERNEL_TYPE := zImage
+	TARGET_PREBUILT_INT_KERNEL := $(KERNEL_OUT)/arch/$(TARGET_ARCH)/boot/zImage
+	TARGET_PREBUILT_INT_KERNEL_TYPE := zImage
 endif
 
 ifeq "$(wildcard $(KERNEL_SRC) )" ""
-ifneq ($(TARGET_PREBUILT_KERNEL),)
+    ifneq ($(TARGET_PREBUILT_KERNEL),)
         HAS_PREBUILT_KERNEL := true
-NEEDS_KERNEL_COPY := true
-else
+        NEEDS_KERNEL_COPY := true
+    else
         $(foreach cf,$(PRODUCT_COPY_FILES), \
             $(eval _src := $(call word-colon,1,$(cf))) \
             $(eval _dest := $(call word-colon,2,$(cf))) \
             $(ifeq kernel,$(_dest), \
                 $(eval HAS_PREBUILT_KERNEL := true)))
-endif
+    endif
 
-ifneq ($(HAS_PREBUILT_KERNEL),)
+    ifneq ($(HAS_PREBUILT_KERNEL),)
         $(warning ***************************************************************)
-        $(warning * Using prebuilt kernel binary instead of source *)
+        $(warning * Using prebuilt kernel binary instead of source              *)
         $(warning ***************************************************************)
         FULL_KERNEL_BUILD := false
-KERNEL_BIN := $(TARGET_PREBUILT_KERNEL)
-else
+        KERNEL_BIN := $(TARGET_PREBUILT_KERNEL)
+    else
         $(warning ***************************************************************)
-        $(warning * *)
-        $(warning * No kernel source found, and no fallback prebuilt defined. *)
-        $(warning * Please make sure your device is properly configured to *)
+        $(warning *                                                             *)
+        $(warning * No kernel source found, and no fallback prebuilt defined.   *)
+        $(warning * Please make sure your device is properly configured to      *)
         $(warning * download the kernel repository to $(KERNEL_SRC))
         $(warning * and add the TARGET_KERNEL_CONFIG variable to BoardConfig.mk *)
-        $(warning * *)
-        $(warning * As an alternative, define the TARGET_PREBUILT_KERNEL *)
-        $(warning * variable with the path to the prebuilt binary kernel image *)
-        $(warning * in your BoardConfig.mk file *)
-        $(warning * *)
+        $(warning *                                                             *)
+        $(warning * As an alternative, define the TARGET_PREBUILT_KERNEL        *)
+        $(warning * variable with the path to the prebuilt binary kernel image  *)
+        $(warning * in your BoardConfig.mk file                                 *)
+        $(warning *                                                             *)
         $(warning ***************************************************************)
         $(error "NO KERNEL")
-endif
+    endif
 else
     NEEDS_KERNEL_COPY := true
-ifeq ($(TARGET_KERNEL_CONFIG),)
+    ifeq ($(TARGET_KERNEL_CONFIG),)
         $(warning **********************************************************)
-        $(warning * Kernel source found, but no configuration was defined *)
-        $(warning * Please add the TARGET_KERNEL_CONFIG variable to your *)
-        $(warning * BoardConfig.mk file *)
+        $(warning * Kernel source found, but no configuration was defined  *)
+        $(warning * Please add the TARGET_KERNEL_CONFIG variable to your   *)
+        $(warning * BoardConfig.mk file                                    *)
         $(warning **********************************************************)
-# $(error "NO KERNEL CONFIG")
-else
-#$(info Kernel source found, building it)
+        # $(error "NO KERNEL CONFIG")
+    else
+        #$(info Kernel source found, building it)
         FULL_KERNEL_BUILD := true
-ifeq ($(TARGET_USES_UNCOMPRESSED_KERNEL),true)
+        ifeq ($(TARGET_USES_UNCOMPRESSED_KERNEL),true)
         $(info Using uncompressed kernel)
             KERNEL_BIN := $(KERNEL_OUT)/piggy
-else
+        else
             KERNEL_BIN := $(TARGET_PREBUILT_INT_KERNEL)
-endif
-endif
+        endif
+    endif
 endif
 
 ifeq ($(FULL_KERNEL_BUILD),true)
@@ -115,34 +111,34 @@ define mv-modules
 endef
 
 define clean-module-folder
-mdpath=`find $(KERNEL_MODULES_OUT) -type f -name modules.order`;\
+    mdpath=`find $(KERNEL_MODULES_OUT) -type f -name modules.order`;\
     if [ "$$mdpath" != "" ];then\
         mpath=`dirname $$mdpath`; rm -rf $$mpath;\
     fi
 endef
 
 ifeq ($(TARGET_ARCH),arm)
-ifneq ($(USE_CCACHE),)
-# search executable
-ccache =
-ifneq ($(strip $(wildcard $(ANDROID_BUILD_TOP)/prebuilts/misc/$(HOST_PREBUILT_EXTRA_TAG)/ccache/ccache)),)
+    ifneq ($(USE_CCACHE),)
+     # search executable
+      ccache =
+      ifneq ($(strip $(wildcard $(ANDROID_BUILD_TOP)/prebuilts/misc/$(HOST_PREBUILT_EXTRA_TAG)/ccache/ccache)),)
         ccache := $(ANDROID_BUILD_TOP)/prebuilts/misc/$(HOST_PREBUILT_EXTRA_TAG)/ccache/ccache
-else
-ifneq ($(strip $(wildcard $(ANDROID_BUILD_TOP)/prebuilts/misc/$(HOST_PREBUILT_TAG)/ccache/ccache)),)
+      else
+        ifneq ($(strip $(wildcard $(ANDROID_BUILD_TOP)/prebuilts/misc/$(HOST_PREBUILT_TAG)/ccache/ccache)),)
           ccache := $(ANDROID_BUILD_TOP)/prebuilts/misc/$(HOST_PREBUILT_TAG)/ccache/ccache
-endif
-endif
-endif
-ifneq ($(TARGET_KERNEL_CUSTOM_TOOLCHAIN),)
-ifeq ($(HOST_OS),darwin)
-            ARM_CROSS_COMPILE:=CROSS_COMPILE="$(ccache) $(ANDROID_BUILD_TOP)/prebuiltdarwin-x86/toolchain/$(TARGET_KERNEL_CUSTOM_TOOLCHAIN)/bin/arm-eabi-"
-else
+        endif
+      endif
+    endif
+    ifneq ($(TARGET_KERNEL_CUSTOM_TOOLCHAIN),)
+        ifeq ($(HOST_OS),darwin)
+            ARM_CROSS_COMPILE:=CROSS_COMPILE="$(ccache) $(ANDROID_BUILD_TOP)/prebuilt/darwin-x86/toolchain/$(TARGET_KERNEL_CUSTOM_TOOLCHAIN)/bin/arm-eabi-"
+        else
             ARM_CROSS_COMPILE:=CROSS_COMPILE="$(ccache) $(ANDROID_BUILD_TOP)/prebuilt/linux-x86/toolchain/$(TARGET_KERNEL_CUSTOM_TOOLCHAIN)/bin/arm-eabi-"
-endif
-else
+        endif
+    else
         ARM_CROSS_COMPILE:=CROSS_COMPILE="$(ccache) $(ARM_EABI_TOOLCHAIN)/arm-eabi-"
-endif
-    ccache =
+    endif
+    ccache = 
 endif
 
 ifeq ($(HOST_OS),darwin)
@@ -187,7 +183,7 @@ ifeq ($(NEEDS_KERNEL_COPY),true)
 file := $(INSTALLED_KERNEL_TARGET)
 ALL_PREBUILT += $(file)
 $(file) : $(KERNEL_BIN) | $(ACP)
-        $(transform-prebuilt-to-target)
+	$(transform-prebuilt-to-target)
 
 ALL_PREBUILT += $(INSTALLED_KERNEL_TARGET)
 endif
