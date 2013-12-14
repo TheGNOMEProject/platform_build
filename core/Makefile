@@ -1332,11 +1332,11 @@ INTERNAL_OTA_PACKAGE_TARGET := $(PRODUCT_OUT)/$(name).zip
 $(INTERNAL_OTA_PACKAGE_TARGET): KEY_CERT_PAIR := $(DEFAULT_KEY_CERT_PAIR)
 
 $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
-        @echo "Package OTA: $@"
+        @echo -e ${PRT_HST}"Package OTA:"${CL_RST}" $@"
 	$(hide) ./build/tools/releasetools/ota_from_target_files -v \
-         -p $(HOST_OUT) \
-         -k $(KEY_CERT_PAIR) \
-         $(BUILT_TARGET_FILES_PACKAGE) $@
+	-p $(HOST_OUT) \
+	-k $(KEY_CERT_PAIR) \
+	$(BUILT_TARGET_FILES_PACKAGE) $@
 
 .PHONY: otapackage
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
