@@ -1332,14 +1332,12 @@ INTERNAL_OTA_PACKAGE_TARGET := $(PRODUCT_OUT)/$(name).zip
 $(INTERNAL_OTA_PACKAGE_TARGET): KEY_CERT_PAIR := $(DEFAULT_KEY_CERT_PAIR)
 
 $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
-	@echo -e ${PRT_HST}"Package OTA: $@"${CL_RST}
+        @echo "Package OTA: $@"
 	$(hide) ./build/tools/releasetools/ota_from_target_files -v \
-	MKBOOTIMG=$(BOARD_CUSTOM_BOOTIMG_MK) \
-	$(OTA_FROM_TARGET_SCRIPT) \
-	   -p $(HOST_OUT) \
-	   -k $(KEY_CERT_PAIR) \
-	   $(BUILT_TARGET_FILES_PACKAGE) $@
-	    
+         -p $(HOST_OUT) \
+         -k $(KEY_CERT_PAIR) \
+         $(BUILT_TARGET_FILES_PACKAGE) $@
+
 .PHONY: otapackage
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
 
@@ -1363,17 +1361,11 @@ endif
 
 $(INTERNAL_UPDATE_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
         @echo -e ${PRT_HST}"Package:"${CL_RST}" $@"
-	$(hide) ./build/tools/releasetools/img_from_target_files -v \
-	MKBOOTIMG=$(BOARD_CUSTOM_BOOTIMG_MK) \
-	$(IMG_FROM_TARGET_SCRIPT) -v \
+	$(hide) MKBOOTIMG=$(BOARD_CUSTOM_MKBOOTIMG) \
+	./build/tools/releasetools/img_from_target_files -v \
 	-s $(extensions) \
 	-p $(HOST_OUT) \
 	$(BUILT_TARGET_FILES_PACKAGE) $@
-ifneq ($(TARGET_CUSTOM_RELEASETOOL),)
-	@echo "Running releasetool"
-	$(hide) $(TARGET_CUSTOM_RELEASETOOL)
-        endif
-
 
 .PHONY: updatepackage
 updatepackage: $(INTERNAL_UPDATE_PACKAGE_TARGET)
