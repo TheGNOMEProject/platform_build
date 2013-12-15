@@ -1325,7 +1325,7 @@ name := $(TARGET_PRODUCT)
 ifeq ($(TARGET_BUILD_TYPE),debug)
   name := $(name)_debug
 endif
-name := rastakat_$(name)-ota-$(shell date +"%Y-%m-%d")
+name := gnome_$(name)-ota-$(shell date +"%Y-%m-%d")
 
 INTERNAL_OTA_PACKAGE_TARGET := $(PRODUCT_OUT)/$(name).zip
 
@@ -1339,7 +1339,7 @@ endif
 
 $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
         @echo "Package OTA: $@"
-        $(hide) ./build/tools/releasetools/ota_from_target_files -v \
+        #$(hide) ./build/tools/releasetools/ota_from_target_files -v \
          -p $(HOST_OUT) \
          -k $(KEY_CERT_PAIR) \
          --override_device=$(override_device) \
@@ -1368,7 +1368,7 @@ endif
 
 $(INTERNAL_UPDATE_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
         @echo "Package: $@"
-        $(hide) ./build/tools/releasetools/img_from_target_files -v \
+        #$(hide) ./build/tools/releasetools/img_from_target_files -v \
          -s $(extensions) \
          -p $(HOST_OUT) \
          $(BUILT_TARGET_FILES_PACKAGE) $@
