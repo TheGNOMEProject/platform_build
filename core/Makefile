@@ -1331,19 +1331,12 @@ INTERNAL_OTA_PACKAGE_TARGET := $(PRODUCT_OUT)/$(name).zip
 
 $(INTERNAL_OTA_PACKAGE_TARGET): KEY_CERT_PAIR := $(DEFAULT_KEY_CERT_PAIR)
 
-ifeq ($(TARGET_OTA_ASSERT_DEVICE),)
-    $(INTERNAL_OTA_PACKAGE_TARGET): override_device := auto
-else
-    $(INTERNAL_OTA_PACKAGE_TARGET): override_device := $(TARGET_OTA_ASSERT_DEVICE)
-endif
-
 $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
-        @echo "Package OTA: $@"
-        #$(hide) ./build/tools/releasetools/ota_from_target_files -v \
-         -p $(HOST_OUT) \
-         -k $(KEY_CERT_PAIR) \
-         --override_device=$(override_device) \
-         $(BUILT_TARGET_FILES_PACKAGE) $@
+	@echo -e ${PRT_HST}"Package OTA: $@"${CL_RST}
+	$(hide) ./build/tools/releasetools/ota_from_target_files -v \
+	-p $(HOST_OUT) \
+	-k $(KEY_CERT_PAIR) \
+	$(BUILT_TARGET_FILES_PACKAGE) $@
 
 .PHONY: otapackage
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
@@ -1367,11 +1360,12 @@ $(INTERNAL_UPDATE_PACKAGE_TARGET): extensions := $(TARGET_RELEASETOOLS_EXTENSION
 endif
 
 $(INTERNAL_UPDATE_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
-        @echo "Package: $@"
-        #$(hide) ./build/tools/releasetools/img_from_target_files -v \
-         -s $(extensions) \
-         -p $(HOST_OUT) \
-         $(BUILT_TARGET_FILES_PACKAGE) $@
+	@echo -e ${PRT_HST}"Package:"${CL_RST}" $@"
+	$(hide) MKBOOTIMG=$(BOARD_CUSTOM_MKBOOTIMG) \
+	./build/tools/releasetools/img_from_target_files -v \
+	-s $(extensions) \
+	-p $(HOST_OUT) \
+	$(BUILT_TARGET_FILES_PACKAGE) $@
 
 .PHONY: updatepackage
 updatepackage: $(INTERNAL_UPDATE_PACKAGE_TARGET)
