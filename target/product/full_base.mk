@@ -37,6 +37,9 @@ PRODUCT_PACKAGES += \
     PhaseBeam \
     VisualizationWallpapers \
     PhotoTable
+    
+PRODUCT_COPY_FILES +=
+	vendor/bootanimation/bootanimation.zip:system/media/bootanimation.zip
 
 # Additional settings used in all AOSP builds
 PRODUCT_PROPERTY_OVERRIDES := \
